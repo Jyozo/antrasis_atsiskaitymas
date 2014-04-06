@@ -1,2 +1,2 @@
-def dummy_functio():
+def dummy_function():
     pass
