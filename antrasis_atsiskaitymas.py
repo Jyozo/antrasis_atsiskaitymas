@@ -4,7 +4,8 @@ import re
 from collections import Counter
 
 
-def read_words(fileName):
+#Scans for words and their frequency in a file
+def read_words(fileName, path):
     file = open(path+fileName, 'r')
     wordcount = {}
     for word in re.findall("[\w']+", file.read()):
@@ -15,7 +16,8 @@ def read_words(fileName):
     return wordcount
 
 
-def read_symbols(fileName):
+#Scans for symbols and their frequency in a file
+def read_symbols(fileName, path):
     file = open(path+fileName, 'r')
     symbolcount = {}
     for symbol in re.findall('\w', file.read()):
@@ -26,6 +28,7 @@ def read_symbols(fileName):
     return symbolcount
 
 
+#Returns a string with the same length as given argument
 def get_line(header):
     result = ''
     for x in range(0, len(header)):
@@ -33,6 +36,7 @@ def get_line(header):
     return result
 
 
+#Writes data into a file, adds formatting
 def write_results(currentFile, header, data):
     currentFile.write(get_line(header)+'\n')
     currentFile.write(header+"\n")
@@ -43,6 +47,7 @@ def write_results(currentFile, header, data):
     pass
 
 
+#Prints help lines
 def print_help():
     print '-----HELP-----'
     print 'Give this program a directory as the first parameter to ' \
@@ -53,6 +58,7 @@ def print_help():
     pass
 
 
+#Primitive argument scanning
 def parse_args():
     if len(sys.argv) < 2 or (sys.argv[1] == '?'):
         print_help()
@@ -61,31 +67,47 @@ def parse_args():
         return sys.argv[1]
 
 
+#Fixies simple human mistakes
 def fix_path(path):
     if path[-1] is not '/':
         path = path + '/'
-        if path[0] is not '/':
-            path = '/' + path
+    if path[0] is not '/':
+        path = '/' + path
     return path
 
 
-path = fix_path(parse_args())
+#Main flow of the script
+def main():
 
-fileNames = [name for name in os.listdir(path)
-             if os.path.isfile(path+name)]
+    #Variables/constants
+    path = fix_path(parse_args())
+    words = {}
+    symbs = {}
+    wordHeader = 'Words and their frequency in file '
+    symbHeader = 'Symbols and their frequency in file '
 
-words = {}
-symbs = {}
-for fname in fileNames:
-    words = dict(Counter(words)+Counter(read_words(fname)))
-    symbs = dict(Counter(symbs)+Counter(read_symbols(fname)))
+    #Getting a list of file names in the specified directory
+    fileNames = [name for name in os.listdir(path)
+                 if os.path.isfile(path+name)]
 
-wordHeader = "Words and their frequency in file "
-symbHeader = "Symbols and their frequency in file "
-newFile = open("Statistics", "w")
-write_results(newFile, "Words from all files", words)
-write_results(newFile, "Symbols from all files", symbs)
-for fname in fileNames:
-    write_results(newFile, wordHeader+fname, read_words(fname))
-    write_results(newFile, symbHeader+fname, read_symbols(fname))
-newFile.close()
+    #Collecting statistics of all the files
+    for fname in fileNames:
+        words = dict(Counter(words)+Counter(read_words(fname, path)))
+        symbs = dict(Counter(symbs)+Counter(read_symbols(fname, path)))
+
+    #Creating a new file and writing the data
+    newFile = open("Statistics", "w")
+    write_results(newFile, "Words from all files", words)
+    write_results(newFile, "Symbols from all files", symbs)
+    for fname in fileNames:
+        write_results(newFile, wordHeader+fname,
+                      read_words(fname, path))
+        write_results(newFile, symbHeader+fname,
+                      read_symbols(fname, path))
+    newFile.close()
+
+    pass
+
+
+if __name__ == "__main__":
+    main()
