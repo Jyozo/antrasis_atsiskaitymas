@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+"""
+Calculates file statistics in specified directory and outputs it into
+a new file. Result contains grouped statistics of all the files and
+for each file individually.
+Statistics consist of words, symbols and their frequency in the file.
+"""
+
 import sys
 import os
 import re
