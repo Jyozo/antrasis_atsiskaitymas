@@ -5,9 +5,9 @@ from collections import Counter
 
 
 def read_words(fileName):
-    file = open(path+fileName)
+    file = open(path+fileName, 'r')
     wordcount = {}
-    for word in re.findall("[\w']+",file.read()):
+    for word in re.findall("[\w']+", file.read()):
         if word not in wordcount:
             wordcount[word] = 1
         else:
@@ -16,14 +16,24 @@ def read_words(fileName):
 
 
 def read_symbols(fileName):
-    file = open(path+fileName)
+    file = open(path+fileName, 'r')
     symbolcount = {}
-    for symbol in re.findall('\w',file.read()):
+    for symbol in re.findall('\w', file.read()):
         if symbol not in symbolcount:
             symbolcount[symbol] = 1
         else:
             symbolcount[symbol] += 1
     return symbolcount
+
+
+def write_results(currentFile, header, data):
+    currentFile.write('------------------------------\n')
+    currentFile.write(header+"\n")
+    currentFile.write('------------------------------\n')
+    currentFile.write('%-10s %6s \n' % ('Item', 'Frequency'))
+    for key, value in data.items():
+        currentFile.write('%-10s %6s \n' % (key, str(value)))
+    pass
 
 
 path = sys.argv[1]
@@ -46,3 +56,8 @@ for fname in fileNames:
 
 print words
 print symbs
+
+newFile = open("Data", "w")
+write_results(newFile, "Words from all files", words)
+write_results(newFile, "Symbols from all files", symbs)
+newFile.close()
