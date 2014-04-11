@@ -26,10 +26,17 @@ def read_symbols(fileName):
     return symbolcount
 
 
+def get_line(header):
+    result = ''
+    for x in range(0,len(header)):
+        result += '-'
+    return result
+
+
 def write_results(currentFile, header, data):
-    currentFile.write('------------------------------\n')
+    currentFile.write(get_line(header)+'\n')
     currentFile.write(header+"\n")
-    currentFile.write('------------------------------\n')
+    currentFile.write(get_line(header)+'\n')
     currentFile.write('%-10s %6s \n' % ('Item', 'Frequency'))
     for key, value in data.items():
         currentFile.write('%-10s %6s \n' % (key, str(value)))
@@ -41,12 +48,8 @@ path = sys.argv[1]
 if path[-1] is not '/':
     path = path+'/'
 
-print 'Specified directory: '+path
-
 fileNames = [name for name in os.listdir(path)
              if os.path.isfile(path+name)]
-
-print fileNames
 
 words = {}
 symbs = {}
@@ -54,10 +57,12 @@ for fname in fileNames:
     words = dict(Counter(words)+Counter(read_words(fname)))
     symbs = dict(Counter(symbs)+Counter(read_symbols(fname)))
 
-print words
-print symbs
-
+wordHeader = "Words and their frequency in file "
+symbHeader = "Symbols and their frequency in file "
 newFile = open("Data", "w")
 write_results(newFile, "Words from all files", words)
 write_results(newFile, "Symbols from all files", symbs)
+for fname in fileNames:
+    write_results(newFile, wordHeader+fname, read_words(fname))
+    write_results(newFile, symbHeader+fname, read_symbols(fname))
 newFile.close()
