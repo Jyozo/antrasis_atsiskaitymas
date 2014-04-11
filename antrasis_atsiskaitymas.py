@@ -79,7 +79,7 @@ def fix_path(path):
 #Checks if the specified directory exists
 def test_directory(path):
     if os.path.isdir(path):
-        return 1
+        return None
     else:
         print "Directory does not exist!"
         sys.exit()
@@ -96,6 +96,7 @@ def main():
     wordHeader = 'Words and their frequency in file '
     symbHeader = 'Symbols and their frequency in file '
 
+    #Test if the specified directory exists
     test_directory(path)
 
     #Getting a list of file names in the specified directory
@@ -109,6 +110,7 @@ def main():
 
     #Creating a new file and writing the data
     newFile = open("Statistics", "w")
+    newFile.write(path+'\n')
     write_results(newFile, "Words from all files", words)
     write_results(newFile, "Symbols from all files", symbs)
     for fname in fileNames:
