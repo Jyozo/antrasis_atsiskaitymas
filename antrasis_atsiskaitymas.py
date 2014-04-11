@@ -1,6 +1,7 @@
 import sys
 import os
 import re
+from collections import Counter
 
 
 def read_words(fileName):
@@ -37,8 +38,11 @@ fileNames = [name for name in os.listdir(path)
 
 print fileNames
 
-print 'Words from the file '+fileNames[0]
-print read_words(fileNames[0])
+words = {}
+symbs = {}
+for fname in fileNames:
+    words = dict(Counter(words)+Counter(read_words(fname)))
+    symbs = dict(Counter(symbs)+Counter(read_symbols(fname)))
 
-print 'Symbols from the file '+fileNames[0]
-print read_symbols(fileNames[0])
+print words
+print symbs
