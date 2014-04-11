@@ -44,7 +44,7 @@ def write_results(currentFile, header, data):
     currentFile.write('%-10s %6s \n' % ('Item', 'Frequency'))
     for key, value in data.items():
         currentFile.write('%-10s %6s \n' % (key, str(value)))
-    pass
+    return None
 
 
 #Prints help lines
@@ -55,7 +55,7 @@ def print_help():
           'present in the directory.'
     print 'Example: '+__file__+' /example/directory/'
     print '--------------'
-    pass
+    return None
 
 
 #Primitive argument scanning
@@ -76,6 +76,16 @@ def fix_path(path):
     return path
 
 
+#Checks if the specified directory exists
+def test_directory(path):
+    if os.path.isdir(path):
+        return 1
+    else:
+        print "Directory does not exist!"
+        sys.exit()
+        return None
+
+
 #Main flow of the script
 def main():
 
@@ -85,6 +95,8 @@ def main():
     symbs = {}
     wordHeader = 'Words and their frequency in file '
     symbHeader = 'Symbols and their frequency in file '
+
+    test_directory(path)
 
     #Getting a list of file names in the specified directory
     fileNames = [name for name in os.listdir(path)
@@ -106,7 +118,7 @@ def main():
                       read_symbols(fname, path))
     newFile.close()
 
-    pass
+    return None
 
 
 if __name__ == "__main__":
