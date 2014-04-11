@@ -28,7 +28,7 @@ def read_symbols(fileName):
 
 def get_line(header):
     result = ''
-    for x in range(0,len(header)):
+    for x in range(0, len(header)):
         result += '-'
     return result
 
@@ -43,10 +43,33 @@ def write_results(currentFile, header, data):
     pass
 
 
-path = sys.argv[1]
+def print_help():
+    print '-----HELP-----'
+    print 'Give this program a directory as the first parameter to ' \
+          'get a file containing the statistics of all the files ' \
+          'present in the directory.'
+    print 'Example: '+__file__+' /example/directory/'
+    print '--------------'
+    pass
 
-if path[-1] is not '/':
-    path = path+'/'
+
+def parse_args():
+    if len(sys.argv) < 2 or (sys.argv[1] == '?'):
+        print_help()
+        sys.exit()
+    else:
+        return sys.argv[1]
+
+
+def fix_path(path):
+    if path[-1] is not '/':
+        path = path + '/'
+        if path[0] is not '/':
+            path = '/' + path
+    return path
+
+
+path = fix_path(parse_args())
 
 fileNames = [name for name in os.listdir(path)
              if os.path.isfile(path+name)]
@@ -59,7 +82,7 @@ for fname in fileNames:
 
 wordHeader = "Words and their frequency in file "
 symbHeader = "Symbols and their frequency in file "
-newFile = open("Data", "w")
+newFile = open("Statistics", "w")
 write_results(newFile, "Words from all files", words)
 write_results(newFile, "Symbols from all files", symbs)
 for fname in fileNames:
